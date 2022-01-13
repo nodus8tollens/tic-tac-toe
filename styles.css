@@ -1,6 +1,7 @@
 html, body{
     height: 100%;
     width: 100%;
+
 }
 
 #board{
@@ -15,4 +16,11 @@ html, body{
 .square{
     border: 5px solid black;
     text-align: center;
+}
+
+#options{
+    display: flex;
+    justify-content: space-around;
+    width: 60%;
+
 }

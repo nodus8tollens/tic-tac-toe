@@ -2,25 +2,6 @@ const squares = document.querySelectorAll('[data-index]');
 
 let gameBoard = new Array(9);
 
-let count = 0;
-function toggleMarker(){
-    if(count % 2 === 0) return 'x';
-    else return 'o';
-}
-
-squares.forEach(square => {
-    square.addEventListener('click', () => {
-        let marker = toggleMarker();
-        gameBoard[parseInt(square.getAttribute('data-index'))] = marker;
-        square.innerText = marker;
-        gameCheck();
-        count++;
-
-    }, {once: true})
-})
-
-
-
 const gameCombo = [
     [0, 1, 2],
     [3, 4, 5],
@@ -32,16 +13,55 @@ const gameCombo = [
     [2, 4, 6]
 ];
 
+let count = 0;
+
+function toggleMarker(){
+    if(count % 2 === 0) return 'x';
+    else return 'o';
+}
+
+function makeMove(square){
+    square.addEventListener('click', () => {
+        let marker = toggleMarker();
+        gameBoard[parseInt(square.getAttribute('data-index'))] = marker;
+        square.innerText = marker;
+        if(gameBoard.length > 3) gameCheck();
+        count++;
+    }, {once: true})
+}
+function startGame(){
+    squares.forEach(makeMove);
+}
+
 function gameCheck() {
     for (let i = 0; i < gameCombo.length; i++) {
         if (gameBoard[gameCombo[i][0]] === 'x' && gameBoard[gameCombo[i][1]] ==='x' && gameBoard[gameCombo[i][2]] === 'x') {
-            console.log('X WINS')
+            squares.forEach(square => {
+                square.removeEventListener('click', makeMove);
+                gameBoard = [];
+            })
+            return console.log('X WINS');
+
         }
-        else if (gameBoard[gameCombo[i][0]] === 'o' && gameBoard[gameCombo[i][1]] === 'o' && gameBoard[gameCombo[i][2]] === 'o') {
-            console.log('O WINS')
+        if (gameBoard[gameCombo[i][0]] === 'o' && gameBoard[gameCombo[i][1]] === 'o' && gameBoard[gameCombo[i][2]] === 'o') {
+            squares.forEach(square => {
+                square.removeEventListener('click', makeMove); //DOESNT WORKKKK
+                gameBoard = [];
+            })
+            return console.log('O WINS');
         }
     }
 }
+
+startGame();
+
+
+
+
+
+
+
+
 
 const myModule = (function() {
     'use strict';
