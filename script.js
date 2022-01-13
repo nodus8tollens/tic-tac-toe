@@ -1,41 +1,36 @@
-let gameBoard = new Array(9);
+function gamestart() {
+    const gameboard = [];
 
+    let moveCount = 0;
 
-let marker = 'x';
+    const pl1 = {
+        name: this.name,
+        marker: 'x'
+    }
 
-const squares = document.querySelectorAll('[data-index]');
+    const pl2 = {
+        name: this.name,
+        marker: 'o'
+    }
 
-squares.forEach(square => {
-    square.addEventListener('click', () => {
-        square.innerText = marker;
-        gameBoard[parseInt(square.getAttribute('data-index'))] = marker;
+    function currentPlayer(){
+        if(moveCount % 2 === 0) return pl1.marker;
+        else return pl2.marker;
+    }
 
+    const squares = document.querySelectorAll('[data-index]');
 
+    squares.forEach(square => {
+        square.innerText = '';
+        square.addEventListener('click', () => {
+            console.log(gameboard);
+            square.innerText = currentPlayer();
+            gameboard[parseInt(square.getAttribute('data-index'))] = currentPlayer();
+            moveCount++;
+        }, {once: true})
     })
-})
+}
 
 
-
-
-const myModule = (function() {
-    'use strict';
-
-    //PUBLIC
-    const publicProperty = 'I am a public property';
-    function publicMethod() {
-        _privateMethod();
-    }
-
-    //PRIVATE
-    const _privateProperty = 'Hello World';
-    function _privateMethod() {
-        console.log(_privateProperty);
-    }
-
-
-
-    return {
-        publicMethod: publicMethod,
-        publicProperty: publicProperty
-    };
-})();
+const newGame = document.querySelector('#newGame');
+newGame.addEventListener('click', gamestart);
