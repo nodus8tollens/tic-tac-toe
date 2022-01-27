@@ -1,5 +1,5 @@
 function gameStart() {
-    let gameBoard = new Array(9);
+    let gameBoard = ['','','','','','','','','',];
 
     const gameCombo = [
         [0, 1, 2],
@@ -12,57 +12,61 @@ function gameStart() {
         [2, 4, 6]
     ];
 
-    function checkScore() {
-        for (let i = 0; i < 8; i++) {
-            if (gameBoard[gameCombo[i][0]] === 'x' && gameBoard[gameCombo[i][1]] === 'x' && gameBoard[gameCombo[i][2]] === 'x') {
-                return pl1.name + ' Wins';
-            }
-
-            if (gameBoard[gameCombo[i][0]] === 'o' && gameBoard[gameCombo[i][1]] === 'o' && gameBoard[gameCombo[i][2]] === 'o') {
-                return pl2.name + ' Wins';
-            }
-        }
-    }
-
     let moveCount = 0;
 
     const pl1 = {
-        name: this.name,
+        name: document.querySelector("#playerOne").value,
         marker: 'x'
     }
 
     const pl2 = {
-        name: this.name,
+        name: document.querySelector("#playerTwo").value,
         marker: 'o'
     }
 
-    const pl1Name = document.querySelector("#playerOne");
-    const pl2Name = document.querySelector("#playerTwo");
+    const squares = document.querySelectorAll('[data-index]');
 
-    pl1.name = pl1Name.value;
-    pl2.name = pl2Name.value;
+    //CHECK FOR WIN OR DRAW
+    function checkScore() {
+        for (let i = 0; i < 8; i++) {
+            if (gameBoard[gameCombo[i][0]] === 'x' && gameBoard[gameCombo[i][1]] === 'x' && gameBoard[gameCombo[i][2]] === 'x') {
+                removeListeners();
+                return pl1.name + ' Wins';
+            }
 
+            else if (gameBoard[gameCombo[i][0]] === 'o' && gameBoard[gameCombo[i][1]] === 'o' && gameBoard[gameCombo[i][2]] === 'o') {
+                removeListeners();
+                return pl2.name + ' Wins';
+            }
+
+        }
+    }
+
+    //KEEPS TRACK OF CURRENT PLAYER BASED ON MOVE COUNT (EVEN FOR PL1, ODD FOR PL2)
     function currentPlayer() {
         if (moveCount % 2 === 0) return pl1.marker;
         else return pl2.marker;
     }
 
-    const squares = document.querySelectorAll('[data-index]');
+    function placeMarker() {
+        this.innerText = currentPlayer();
+        gameBoard[parseInt(this.getAttribute('data-index'))] = currentPlayer();
+        moveCount++;
+        checkScore();
+        console.log(checkScore());
+    }
 
-    squares.forEach(square => {
-        square.innerText = '';
-        square.addEventListener('click', () => {
-            square.innerText = currentPlayer();
-            gameBoard[parseInt(square.getAttribute('data-index'))] = currentPlayer();
-            moveCount++;
-            console.log(checkScore());
+    for(let i = 0; i < squares.length; i++){
+        squares[i].innerText = '';
+        squares[i].addEventListener('click', placeMarker , {once: true})
+    }
 
-        }, {once: true})
-    })
-
-
+    function removeListeners(){
+        for(let i = 0; i < squares.length; i++){
+            squares[i].removeEventListener('click', placeMarker);
+        }
+    }
 }
-
 
 const newGame = document.querySelector('#newGame');
 newGame.addEventListener('click', gameStart);
